@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Roadmap</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Fira Code', monospace;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      cursor: url('https://www.pngarts.com/files/10/Cursor-Download-Transparent-PNG-Image.png'), auto;
+    }
+
+
+    .gradient-toggle {
+        background: linear-gradient(to right, #000000, #ffffff);
+        color: #000;
+        font-weight: bold;
+        transition: transform 0.5s ease;
+    }
+    .gradient-toggle:hover {
+        transform: scale(1.05);
+    }
+
+    .gradient-logout {
+        background: linear-gradient(to right, #f0b836, #cb5c08);
+        color: #000;
+        font-weight: bold;
+        transition: transform 0.2s ease;
+    }
+    .gradient-logout:hover {
+        transform: scale(1.05);
+    }
+    
+
+
+
+    .created-by {
+      font-size: 0.875rem; /* text-sm */
+      font-style: italic;
+      background: linear-gradient(to right, #007cf0, #00df9a); /* Blue to Green */
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+.created-by {
+  background-size: 200% auto;
+  animation: gradientShift 3s linear infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+    .gradient-heading {
+      color: transparent;
+      font-weight: bold;
+      margin-bottom: 1.5rem; /* mb-6 */
+      text-align: center;
+      background: linear-gradient(to right, #90ee90, #d4fcd4); /* Light green to lightest green */
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 2.25rem; /* text-4xl */
+    }
+    .gradient-heading:hover {
+  text-shadow: 0 0 15px #d4fcd4;
+}
+
+
+
+
+
+    /* Glowing cursor trail */
+    .cursor-dot {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: rgba(0, 255, 255, 0.7);
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 15px cyan;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      animation: fadeOut 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2);
+      }
+    }
+
+    .navbar {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      transition: all 0.3s ease;
+      background-color: #161b22;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-content {
+      background: #161b22;
+      color: #c9d1d9;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      max-width: 700px;
+      width: 90%;
+      overflow: auto;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .solved {
+      text-decoration: line-through;
+      color: #91b5f3;
+    }
+
+    .difficulty-badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+    }
+
+    .easy { background: linear-gradient(to right, #268eef, #19cc75); color: #ecfdf5; }
+    .medium { background: linear-gradient(to right, #19cc75, #6a0dad); color: #fff7ed; }
+    .hard { background: linear-gradient(to right, #6a0dad, #ad0d7d); color: #fdf4ff; }
+
+    .question-item {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .action-btn {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      border-radius: 0.375rem;
+      transition: all 0.2s;
+    }
+
+    .solution-btn { background: linear-gradient(to right, #08bd84, #04f530); color: #080524; }
+    .mark-btn {
+  background: linear-gradient(to right, #001f8d, #6a0dad); /* Deep blue to purple */
+  color: #fff7ed;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+    .undo-btn { background-color: #4b5563; color: #f3f4f6; }
+
+    .action-btn:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar bg-gray-900 text-white p-4 sticky top-0 z-50 border-b border-gray-800">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-green-400">🌌 DSA Roadmap</h1>
+        <div class="flex items-center space-x-4">
+        <button onclick="toggleTheme()" class="text-sm gradient-toggle text-white px-3 py-1 rounded">Toggle Theme</button>
+        <button onclick="logout()" class="text-sm gradient-logout text-white px-3 py-1 rounded">Logout</button>
+        <span id="welcome-user" class="text-sm text-gray-300 ml-4"></span>
+    </div>
+    </div>
+  </nav>
+
+  <div id="auth-section" class="max-w-md mx-auto mt-10 bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-md text-center">
+    <h2 class="text-2xl font-bold text-green-400 mb-4">🔐 Welcome to DSA Roadmap</h2>
+    
+    <div id="auth-forms">
+      <div id="register-form" class="space-y-4">
+        <input id="reg-email" type="email" placeholder="Email" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <input id="reg-password" type="password" placeholder="Password" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <button onclick="register()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Register</button>
+        <p class="text-sm text-gray-400">Already have an account? <button onclick="switchToLogin()" class="text-blue-400 hover:underline">Login</button></p>
+      </div>
+
+      <div id="login-form" class="space-y-4 hidden">
+        <input id="login-email" type="email" placeholder="Email" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <input id="login-password" type="password" placeholder="Password" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <button onclick="login()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Login</button>
+        <p class="text-sm text-gray-400">New here? <button onclick="switchToRegister()" class="text-blue-400 hover:underline">Create an account</button></p>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-5xl mx-auto p-6">
+    <h2 class="gradient-heading">🧠 Complete DSA Preparation</h2>
+
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center space-x-4">
+        <div>
+          <label for="filter" class="block text-sm font-medium mb-1">Filter by Difficulty:</label>
+          <select id="filter" class="text-white bg-gray-700 p-2 rounded border border-gray-600" onchange="renderFiltered()">
+            <option value="all">All Problems</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="text-sm text-gray-400">
+          <span id="solvedCount">0</span> problems solved
+        </div>
+      </div>
+      <div class="flex space-x-2">
+        <div class="created-by">– created by Sai Nadigatla</div>
+      </div>
+    </div>
+
+    <div id="phases" class="space-y-6"></div>
+  </main>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtMlrxGSMTdAXJIYiNhXoyfP6PmPvTubs",
+      authDomain: "dsa-roadmap-fa36c.firebaseapp.com",
+      projectId: "dsa-roadmap-fa36c",
+      appId: "1:765605112099:web:34c72e49fc3f77058fc496"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
+
+  <script>
+    // Your DSA roadmap data
+    const data = [
+  {
+    phase: "Arrays",
+    questions: [
+      { title: "Two Sum", difficulty: "easy", codeFile: "solutions/two_sum.txt" },
+      { title: "Kadane's Algorithm", difficulty: "medium", codeFile: "solutions/kadanes_algorithm.txt" },
+      { title: "Merge Intervals", difficulty: "medium", codeFile: "solutions/merge_intervals.txt" },
+      { title: "Buy and Sell Stock", difficulty: "easy", codeFile: "solutions/buy_and_sell_stock.txt" },
+      { title: "Missing Number", difficulty: "easy", codeFile: "solutions/missing_number.txt" },
+      { title: "Rotate Array", difficulty: "medium", codeFile: "solutions/rotate_array.txt" },
+      { title: "Maximum Subarray", difficulty: "easy", codeFile: "solutions/maximum_subarray.txt" },
+      { title: "Product of Array Except Self", difficulty: "medium", codeFile: "solutions/product_except_self.txt" },
+      { title: "Find Duplicate Number", difficulty: "medium", codeFile: "solutions/find_duplicate_number.txt" },
+      { title: "Set Matrix Zeroes", difficulty: "medium", codeFile: "solutions/set_matrix_zeroes.txt" }
+    ]
+    
+
+  },
+  {
+    phase: "Strings",
+    questions: [
+      { title: "Valid Anagram", difficulty: "easy", codeFile: "solutions/valid_anagram.txt" },
+      { title: "Longest Palindromic Substring", difficulty: "medium", codeFile: "solutions/longest_palindromic_substring.txt" },
+      { title: "Group Anagrams", difficulty: "medium", codeFile: "solutions/group_anagrams.txt" },
+      { title: "Longest Common Prefix", difficulty: "easy", codeFile: "solutions/longest_common_prefix.txt" },
+      { title: "Implement strStr()", difficulty: "easy", codeFile: "solutions/implement_strstr.txt" },
+      { title: "ZigZag Conversion", difficulty: "medium", codeFile: "solutions/zigzag_conversion.txt" },
+      { title: "String to Integer (atoi)", difficulty: "medium", codeFile: "solutions/string_to_integer_atoi.txt" },
+      { title: "Count and Say", difficulty: "medium", codeFile: "solutions/count_and_say.txt" },
+      { title: "Valid Parentheses", difficulty: "easy", codeFile: "solutions/valid_parentheses.txt" },
+      { title: "Check for Isomorphic Strings", difficulty: "easy", codeFile: "solutions/check_isomorphic_strings.txt" }
+    ]
+    
+
+  },
+  {
+    phase: "Linked Lists",
+    questions: [
+      { title: "Reverse Linked List", difficulty: "easy", codeFile: "solutions/reverse_linked_list.txt" },
+      { title: "Cycle Detection", difficulty: "easy", codeFile: "solutions/cycle_detection.txt" },
+      { title: "Merge Two Sorted Lists", difficulty: "easy", codeFile: "solutions/merge_two_sorted_lists.txt" },
+      { title: "Remove N-th Node From End", difficulty: "medium", codeFile: "solutions/remove_nth_node_from_end.txt" },
+      { title: "Add Two Numbers", difficulty: "medium", codeFile: "solutions/add_two_numbers.txt" },
+      { title: "Copy List with Random Pointer", difficulty: "medium", codeFile: "solutions/copy_list_with_random_pointer.txt" },
+      { title: "Linked List Cycle II", difficulty: "medium", codeFile: "solutions/linked_list_cycle_ii.txt" },
+      { title: "Palindrome Linked List", difficulty: "easy", codeFile: "solutions/palindrome_linked_list.txt" },
+      { title: "Intersection of Two Linked Lists", difficulty: "easy", codeFile: "solutions/intersection_of_two_linked_lists.txt" },
+      { title: "Flatten a Multilevel Doubly Linked List", difficulty: "medium", codeFile: "solutions/flatten_multilevel_doubly_linked_list.txt" }
+    ]
+    
+  },
+  {
+    phase: "Stacks and Queues",
+    questions: [
+      { title: "Valid Parentheses", difficulty: "easy", codeFile: "solutions/valid_parentheses.txt" },
+      { title: "Min Stack", difficulty: "medium", codeFile: "solutions/min_stack.txt" },
+      { title: "Evaluate Reverse Polish Notation", difficulty: "medium", codeFile: "solutions/evaluate_reverse_polish_notation.txt" },
+      { title: "Implement Queue using Stacks", difficulty: "easy", codeFile: "solutions/implement_queue_using_stacks.txt" },
+      { title: "Sliding Window Maximum", difficulty: "hard", codeFile: "solutions/sliding_window_maximum.txt" },
+      { title: "Daily Temperatures", difficulty: "medium", codeFile: "solutions/daily_temperatures.txt" },
+      { title: "Next Greater Element", difficulty: "medium", codeFile: "solutions/next_greater_element.txt" },
+      { title: "Design Circular Queue", difficulty: "medium", codeFile: "solutions/design_circular_queue.txt" },
+      { title: "Trapping Rain Water", difficulty: "hard", codeFile: "solutions/trapping_rain_water.txt" },
+      { title: "Largest Rectangle in Histogram", difficulty: "hard", codeFile: "solutions/largest_rectangle_in_histogram.txt" }
+    ]
+    
+  },
+  {
+    phase: "Trees",
+    questions: [
+      { title: "Invert Binary Tree", difficulty: "easy", codeFile: "solutions/invert_binary_tree.txt" },
+      { title: "Maximum Depth of Binary Tree", difficulty: "easy", codeFile: "solutions/maximum_depth_of_binary_tree.txt" },
+      { title: "Diameter of Binary Tree", difficulty: "easy", codeFile: "solutions/diameter_of_binary_tree.txt" },
+      { title: "Balanced Binary Tree", difficulty: "easy", codeFile: "solutions/balanced_binary_tree.txt" },
+      { title: "Path Sum", difficulty: "easy", codeFile: "solutions/path_sum.txt" },
+      { title: "Same Tree", difficulty: "easy", codeFile: "solutions/same_tree.txt" },
+      { title: "Subtree of Another Tree", difficulty: "easy", codeFile: "solutions/subtree_of_another_tree.txt" },
+      { title: "Construct Binary Tree from Inorder and Preorder", difficulty: "medium", codeFile: "solutions/construct_tree_from_inorder_preorder.txt" },
+      { title: "Binary Tree Right Side View", difficulty: "medium", codeFile: "solutions/binary_tree_right_side_view.txt" },
+      { title: "Lowest Common Ancestor of BST", difficulty: "medium", codeFile: "solutions/lowest_common_ancestor_bst.txt" }
+    ]
+    
+  },
+  {
+    phase: "Graphs",
+    questions: [
+      { title: "Clone Graph", difficulty: "medium", codeFile: "solutions/clone_graph.txt" },
+      { title: "Number of Islands", difficulty: "medium", codeFile: "solutions/number_of_islands.txt" },
+      { title: "Course Schedule", difficulty: "medium", codeFile: "solutions/course_schedule.txt" },
+      { title: "Pacific Atlantic Water Flow", difficulty: "medium", codeFile: "solutions/pacific_atlantic_water_flow.txt" },
+      { title: "Word Ladder", difficulty: "hard", codeFile: "solutions/word_ladder.txt" },
+      { title: "Minimum Spanning Tree", difficulty: "medium", codeFile: "solutions/minimum_spanning_tree.txt" },
+      { title: "Dijkstra’s Algorithm", difficulty: "medium", codeFile: "solutions/dijkstras_algorithm.txt" },
+      { title: "Topological Sort", difficulty: "medium", codeFile: "solutions/topological_sort.txt" },
+      { title: "Graph Valid Tree", difficulty: "medium", codeFile: "solutions/graph_valid_tree.txt" },
+      { title: "Detect Cycle in Graph", difficulty: "medium", codeFile: "solutions/detect_cycle_in_graph.txt" }
+    ]
+    
+  },
+  {
+    phase: "Greedy",
+    questions: [
+      { title: "Jump Game", difficulty: "medium", codeFile: "solutions/jump_game.txt" },
+      { title: "Gas Station", difficulty: "medium", codeFile: "solutions/gas_station.txt" },
+      { title: "Candy Distribution", difficulty: "hard", codeFile: "solutions/candy_distribution.txt" },
+      { title: "Non-overlapping Intervals", difficulty: "medium", codeFile: "solutions/non_overlapping_intervals.txt" },
+      { title: "Insert Interval", difficulty: "medium", codeFile: "solutions/insert_interval.txt" },
+      { title: "Minimum Number of Arrows to Burst Balloons", difficulty: "medium", codeFile: "solutions/min_arrows_to_burst_balloons.txt" },
+      { title: "Partition Labels", difficulty: "medium", codeFile: "solutions/partition_labels.txt" },
+      { title: "Greedy Florist", difficulty: "easy", codeFile: "solutions/greedy_florist.txt" },
+      { title: "Activity Selection Problem", difficulty: "easy", codeFile: "solutions/activity_selection_problem.txt" },
+      { title: "Job Sequencing Problem", difficulty: "medium", codeFile: "solutions/job_sequencing_problem.txt" }
+    ]
+    
+  },
+  {
+    phase: "Backtracking",
+    questions: [
+      { title: "Subset Sum", difficulty: "medium", codeFile: "solutions/subset_sum.txt" },
+      { title: "Permutations", difficulty: "medium", codeFile: "solutions/permutations.txt" },
+      { title: "Combination Sum", difficulty: "medium", codeFile: "solutions/combination_sum.txt" },
+      { title: "Sudoku Solver", difficulty: "hard", codeFile: "solutions/sudoku_solver.txt" },
+      { title: "N-Queens", difficulty: "hard", codeFile: "solutions/n_queens.txt" },
+      { title: "Word Search", difficulty: "medium", codeFile: "solutions/word_search.txt" },
+      { title: "Letter Combinations of a Phone Number", difficulty: "medium", codeFile: "solutions/letter_combinations_phone_number.txt" },
+      { title: "Generate Parentheses", difficulty: "medium", codeFile: "solutions/generate_parentheses.txt" },
+      { title: "Palindrome Partitioning", difficulty: "medium", codeFile: "solutions/palindrome_partitioning.txt" },
+      { title: "Rat in a Maze", difficulty: "medium", codeFile: "solutions/rat_in_a_maze.txt" }
+    ]
+    
+  },
+  {
+    phase: "Dynamic Programming",
+    questions: [
+      { title: "Fibonacci Number", difficulty: "easy", codeFile: "solutions/fibonacci_number.txt" },
+      { title: "Climbing Stairs", difficulty: "easy", codeFile: "solutions/climbing_stairs.txt" },
+      { title: "House Robber", difficulty: "medium", codeFile: "solutions/house_robber.txt" },
+      { title: "Longest Increasing Subsequence", difficulty: "medium", codeFile: "solutions/longest_increasing_subsequence.txt" },
+      { title: "Coin Change", difficulty: "medium", codeFile: "solutions/coin_change.txt" },
+      { title: "Edit Distance", difficulty: "hard", codeFile: "solutions/edit_distance.txt" },
+      { title: "0/1 Knapsack", difficulty: "medium", codeFile: "solutions/zero_one_knapsack.txt" },
+      { title: "Longest Common Subsequence", difficulty: "medium", codeFile: "solutions/longest_common_subsequence.txt" },
+      { title: "Partition Equal Subset Sum", difficulty: "medium", codeFile: "solutions/partition_equal_subset_sum.txt" },
+      { title: "Unique Paths", difficulty: "medium", codeFile: "solutions/unique_paths.txt" }
+    ]
+    
+  },
+  {
+    phase: "Bit Manipulation",
+    questions: [
+      { title: "Single Number", difficulty: "easy", codeFile: "solutions/single_number.txt" },
+      { title: "Number of 1 Bits", difficulty: "easy", codeFile: "solutions/number_of_1_bits.txt" },
+      { title: "Counting Bits", difficulty: "medium", codeFile: "solutions/counting_bits.txt" },
+      { title: "Reverse Bits", difficulty: "easy", codeFile: "solutions/reverse_bits.txt" },
+      { title: "Missing Number", difficulty: "easy", codeFile: "solutions/missing_number.txt" },
+      { title: "Sum of Two Integers", difficulty: "medium", codeFile: "solutions/sum_of_two_integers.txt" },
+      { title: "Power of Two", difficulty: "easy", codeFile: "solutions/power_of_two.txt" },
+      { title: "Find the Duplicate Number", difficulty: "medium", codeFile: "solutions/find_the_duplicate_number.txt" },
+      { title: "Divide Two Integers", difficulty: "medium", codeFile: "solutions/divide_two_integers.txt" },
+      { title: "Bitwise AND of Numbers Range", difficulty: "medium", codeFile: "solutions/bitwise_and_of_numbers_range.txt" }
+    ]
+    
+  }
+  
+];
+
+
+
+    function toggleTheme() {
+      document.body.classList.toggle("bg-white");
+      document.body.classList.toggle("text-black");
+    }
+    function showSolution(codeFile) {
+      const modal = document.createElement("div");
+      modal.className = "modal";
+      modal.onclick = () => modal.remove();
+      
+      const content = document.createElement("div");
+      content.className = "modal-content";
+      content.onclick = e => e.stopPropagation();
+      
+      const pre = document.createElement("pre");
+      pre.textContent = "Loading...";
+      content.appendChild(pre);
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+      modal.style.display = "flex";
+      
+      if (typeof codeFile === "string" && codeFile.endsWith(".txt")) {
+        fetch(codeFile)
+        .then(response => response.text())
+        .then(code => {
+          pre.textContent = code;
+        })
+        .catch(err => {
+          pre.textContent = "Failed to load solution.";
+          console.error(err);
+        });
+      } else {
+        pre.textContent = codeFile || "No solution available.";
+      }
+    }
+    
+    
+    function toggleSolved(id) {
+      const solved = JSON.parse(localStorage.getItem('solved') || '{}');
+      solved[id] = !solved[id];
+      localStorage.setItem('solved', JSON.stringify(solved));
+      renderFiltered();
+    }
+    
+    function updateSolvedCount() {
+      const solved = JSON.parse(localStorage.getItem('solved') || '{}');
+      document.getElementById('solvedCount').textContent = Object.values(solved).filter(Boolean).length;
+    }
+    
+    function renderFiltered() {
+      const filter = document.getElementById('filter').value;
+      const container = document.getElementById("phases");
+      container.innerHTML = '';
+      const solved = JSON.parse(localStorage.getItem('solved') || '{}');
+      
+      data.forEach((phaseObj, phaseIdx) => {
+        const card = document.createElement("div");
+        card.className = "card bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-md";
+
+        const header = document.createElement("div");
+        header.className = "flex justify-between items-center mb-4";
+        header.innerHTML = `<h3 class="text-2xl font-bold text-green-400">${phaseObj.phase}</h3>
+        <div class="text-sm text-gray-400">${phaseObj.questions.filter(q => filter === 'all' || q.difficulty === filter).length} problems</div>`;
+        card.appendChild(header);
+        
+        const listContainer = document.createElement("div");
+        listContainer.className = "space-y-1";
+        
+        phaseObj.questions.forEach((q, idx) => {
+          if (filter !== "all" && q.difficulty !== filter) return;
+          const id = phaseObj.phase + "-" + idx;
+
+          const item = document.createElement("div");
+          item.className = `question-item ${solved[id] ? 'solved' : ''}`;
+          item.innerHTML = `
+            <span>${q.title}</span>
+            <span class="difficulty-badge ${q.difficulty}">${q.difficulty}</span>
+            <button class="action-btn solution-btn" onclick='showSolution(${JSON.stringify(q.code || q.codeFile || "")})'>Solution</button>
+            <button class="action-btn ${solved[id] ? 'undo-btn' : 'mark-btn'}" onclick='toggleSolved("${id}")'>
+              ${solved[id] ? 'Undo' : 'Mark Solved'}
+              </button>`;
+          listContainer.appendChild(item);
+        });
+        
+        card.appendChild(listContainer);
+        container.appendChild(card);
+      });
+      
+      updateSolvedCount();
+    }
+    
+    // Auth functions
+    function switchToLogin() {
+      document.getElementById("register-form").classList.add("hidden");
+      document.getElementById("login-form").classList.remove("hidden");
+    }
+    
+    function switchToRegister() {
+      document.getElementById("login-form").classList.add("hidden");
+      document.getElementById("register-form").classList.remove("hidden");
+    }
+    
+    function register() {
+      const email = document.getElementById("reg-email").value;
+      const password = document.getElementById("reg-password").value;
+      
+      if (!email || !password) return alert("Please fill all fields.");
+      
+      auth.createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        alert("Account created! Please log in.");
+        switchToLogin();
+      })
+        .catch((error) => {
+          alert("Registration Error: " + error.message);
+        });
+      }
+
+      function login() {
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+        
+        if (!email || !password) return alert("Please fill all fields.");
+        
+        auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          document.getElementById("auth-section").style.display = "none";
+          document.querySelector("main").style.display = "block";
+          document.getElementById("welcome-user").textContent = `Hello, ${user.email}`;
+          renderFiltered();
+        })
+        .catch((error) => {
+          alert("Login Error: " + error.message);
+        });
+    }
+    
+    function logout() {
+      auth.signOut().then(() => {
+        location.reload();
+      });
+    }
+    
+    // Initialize the app
+    document.addEventListener("DOMContentLoaded", () => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          document.getElementById("auth-section").style.display = "none";
+          document.querySelector("main").style.display = "block";
+          document.getElementById("welcome-user").textContent = `Hello, ${user.email}`;
+          renderFiltered();
+        } else {
+          document.querySelector("main").style.display = "none";
+        }
+      });
+
+      // Cursor effect
+      document.addEventListener('mousemove', (e) => {
+        const dot = document.createElement('div');
+        dot.classList.add('cursor-dot');
+        dot.style.left = `${e.clientX}px`;
+        dot.style.top = `${e.clientY}px`;
+        document.body.appendChild(dot);
+        setTimeout(() => dot.remove(), 600);
+      });
+    });
+    </script>
+</body>
+</html>
+    

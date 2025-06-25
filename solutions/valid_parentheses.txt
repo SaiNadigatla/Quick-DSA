@@ -1,0 +1,21 @@
+// C++ Program to check Valid Parentheses
+#include <bits/stdc++.h>
+using namespace std;
+bool isValid(string s) {
+    stack<char> st;
+    for (char c : s) {
+        if (c == '(' || c == '{' || c == '[') st.push(c);
+        else {
+            if (st.empty()) return false;
+            char t = st.top();
+            if ((c == ')' && t != '(') || (c == '}' && t != '{') || (c == ']' && t != '['))
+                return false;
+            st.pop();
+        }
+    }
+    return st.empty();
+}
+int main() {
+    cout << isValid("()[]{}");
+    return 0;
+}

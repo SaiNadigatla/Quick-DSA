@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - DSA Roadmap</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+  <div class="bg-gray-800 p-6 rounded-xl shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold text-green-400 text-center mb-4">🔐 DSA Login</h1>
+    <div id="auth-forms">
+      <div id="register-form" class="space-y-4">
+        <input id="reg-email" type="email" placeholder="Email" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <input id="reg-password" type="password" placeholder="Password" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <button onclick="register()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Register</button>
+        <p class="text-sm text-gray-400 text-center">Already have an account? <button onclick="switchToLogin()" class="text-blue-400 hover:underline">Login</button></p>
+      </div>
+
+      <div id="login-form" class="space-y-4 hidden">
+        <input id="login-email" type="email" placeholder="Email" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <input id="login-password" type="password" placeholder="Password" class="w-full p-2 bg-gray-700 text-white rounded" />
+        <button onclick="login()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Login</button>
+        <p class="text-sm text-gray-400 text-center">New here? <button onclick="switchToRegister()" class="text-blue-400 hover:underline">Create an account</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtMlrxGSMTdAXJIYiNhXoyfP6PmPvTubs",
+      authDomain: "dsa-roadmap-fa36c.firebaseapp.com",
+      projectId: "dsa-roadmap-fa36c",
+      appId: "1:765605112099:web:34c72e49fc3f77058fc496"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
+
+  <script>
+    function switchToLogin() {
+      document.getElementById("register-form").classList.add("hidden");
+      document.getElementById("login-form").classList.remove("hidden");
+    }
+
+    function switchToRegister() {
+      document.getElementById("login-form").classList.add("hidden");
+      document.getElementById("register-form").classList.remove("hidden");
+    }
+
+    function register() {
+      const email = document.getElementById("reg-email").value;
+      const password = document.getElementById("reg-password").value;
+      if (!email || !password) return alert("Please fill all fields.");
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert("Account created! Please log in.");
+          switchToLogin();
+        })
+        .catch((error) => {
+          alert("Registration Error: " + error.message);
+        });
+    }
+
+    function login() {
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      if (!email || !password) return alert("Please fill all fields.");
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          sessionStorage.setItem("loggedInUser", user.uid);
+          location.href = "new_index.html";
+        })
+        .catch((error) => {
+          alert("Login Error: " + error.message);
+        });
+    }
+  </script>
+</body>
+</html>
