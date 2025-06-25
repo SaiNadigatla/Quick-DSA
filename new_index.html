@@ -568,7 +568,7 @@
     
     function logout() {
       auth.signOut().then(() => {
-        location.reload();
+        location.href = "index.html";
       });
     }
     
