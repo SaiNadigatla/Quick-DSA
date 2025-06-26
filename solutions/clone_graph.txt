@@ -1,0 +1,16 @@
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) return nullptr;
+        unordered_map<Node*, Node*> visited;
+        return dfs(node, visited);
+    }
+    Node* dfs(Node* node, unordered_map<Node*, Node*>& visited) {
+        if (visited.count(node)) return visited[node];
+        Node* copy = new Node(node->val);
+        visited[node] = copy;
+        for (auto n : node->neighbors)
+            copy->neighbors.push_back(dfs(n, visited));
+        return copy;
+    }
+};

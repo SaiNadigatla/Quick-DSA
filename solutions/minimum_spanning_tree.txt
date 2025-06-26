@@ -1,0 +1,1 @@
+Use Prim's or Kruskal's algorithm to construct MST (implementation varies).
