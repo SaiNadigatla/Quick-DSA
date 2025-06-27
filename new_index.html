@@ -92,26 +92,8 @@
 
 
 
-    /* Glowing cursor trail */
-    .cursor-dot {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background: rgba(0, 255, 255, 0.7);
-      border-radius: 50%;
-      pointer-events: none;
-      box-shadow: 0 0 15px cyan;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      animation: fadeOut 0.6s ease-out forwards;
-    }
 
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(2);
-      }
-    }
+
 
     .navbar {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -237,15 +219,17 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-4">
-        <div>
-          <label for="filter" class="block text-sm font-medium mb-1">Filter by Difficulty:</label>
-          <select id="filter" class="text-white bg-gray-700 p-2 rounded border border-gray-600" onchange="renderFiltered()">
-            <option value="all">All Problems</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
+<div id="filter-box" class="p-4 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border shadow-[0_0_30px_5px_rgba(34,197,94,0.4)] transition-all duration-300">
+  <label for="filter" class="block text-lg font-semibold mb-2 text-green-300 tracking-wide">🔥 Filter by Difficulty:</label>
+  <select id="filter" class="w-full text-white bg-gray-700 p-3 rounded-lg border border-green-500 focus:outline-none font-medium shadow-inner transition-all duration-300" onchange="handleFilterChange()">
+    <option value="all">All Problems</option>
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
+</div>
+
+
         <div class="text-sm text-gray-400">
           <span id="solvedCount">0</span> problems solved
         </div>
@@ -258,22 +242,43 @@
     <div id="phases" class="space-y-6"></div>
   </main>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDtMlrxGSMTdAXJIYiNhXoyfP6PmPvTubs",
-      authDomain: "dsa-roadmap-fa36c.firebaseapp.com",
-      projectId: "dsa-roadmap-fa36c",
-      appId: "1:765605112099:web:34c72e49fc3f77058fc496"
-    };
+<!-- Firebase SDKs (compat version) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-  </script>
+<script>
+  // ✅ Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDtMlrxGSMTdAXJIYiNhXoyfP6PmPvTubs",
+    authDomain: "dsa-roadmap-fa36c.firebaseapp.com",
+    projectId: "dsa-roadmap-fa36c",
+    appId: "1:765605112099:web:34c72e49fc3f77058fc496"
+  };
+
+  // ✅ Initialize Firebase and get references
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // ✅ Handle login status
+  auth.onAuthStateChanged((user) => {
+    if (!user) {
+      window.location.href = "login.html"; // Redirect to login if not logged in
+    } else {
+      document.getElementById("welcome-user").innerText = `Welcome, ${user.email}`;
+
+      // Load user's solved data from Firestore
+      db.collection('users').doc(user.uid).get().then((doc) => {
+        if (doc.exists) {
+          localStorage.setItem('solved', JSON.stringify(doc.data().solved || {}));
+          renderFiltered(); // Update the UI
+        }
+      });
+    }
+  });
+</script>
+
 
 
   <script>
@@ -349,148 +354,138 @@
   {
     phase: "Strings",
     questions: [
-      { title: "Valid Anagram", difficulty: "easy", codeFile: "solutions/valid_anagram.txt" },
-      { title: "Longest Palindromic Substring", difficulty: "medium", codeFile: "solutions/longest_palindromic_substring.txt" },
-      { title: "Group Anagrams", difficulty: "medium", codeFile: "solutions/group_anagrams.txt" },
-      { title: "Longest Common Prefix", difficulty: "easy", codeFile: "solutions/longest_common_prefix.txt" },
-      { title: "Implement strStr()", difficulty: "easy", codeFile: "solutions/implement_strstr.txt" },
-      { title: "ZigZag Conversion", difficulty: "medium", codeFile: "solutions/zigzag_conversion.txt" },
-      { title: "String to Integer (atoi)", difficulty: "medium", codeFile: "solutions/string_to_integer_atoi.txt" },
-      { title: "Count and Say", difficulty: "medium", codeFile: "solutions/count_and_say.txt" },
-      { title: "Valid Parentheses", difficulty: "easy", codeFile: "solutions/valid_parentheses.txt" },
-      { title: "Check for Isomorphic Strings", difficulty: "easy", codeFile: "solutions/check_isomorphic_strings.txt" }
+      { title: "Valid Anagram", difficulty: "easy", codeFile: "solutions/valid_anagram.txt", link: "https://leetcode.com/problems/valid-anagram/" },
+      { title: "Longest Palindromic Substring", difficulty: "medium", codeFile: "solutions/longest_palindromic_substring.txt", link: "https://leetcode.com/problems/longest-palindromic-substring/" },
+      { title: "Group Anagrams", difficulty: "medium", codeFile: "solutions/group_anagrams.txt", link: "https://leetcode.com/problems/group-anagrams/" },
+      { title: "Longest Common Prefix", difficulty: "easy", codeFile: "solutions/longest_common_prefix.txt", link: "https://leetcode.com/problems/longest-common-prefix/" },
+      { title: "Implement strStr()", difficulty: "easy", codeFile: "solutions/implement_strstr.txt", link: "https://leetcode.com/problems/implement-strstr/" },
+      { title: "ZigZag Conversion", difficulty: "medium", codeFile: "solutions/zigzag_conversion.txt", link: "https://leetcode.com/problems/zigzag-conversion/" },
+      { title: "String to Integer (atoi)", difficulty: "medium", codeFile: "solutions/string_to_integer_atoi.txt", link: "https://leetcode.com/problems/string-to-integer-atoi/" },
+      { title: "Count and Say", difficulty: "medium", codeFile: "solutions/count_and_say.txt", link: "https://leetcode.com/problems/count-and-say/" },
+      { title: "Valid Parentheses", difficulty: "easy", codeFile: "solutions/valid_parentheses.txt", link: "https://leetcode.com/problems/valid-parentheses/" },
+      { title: "Check for Isomorphic Strings", difficulty: "easy", codeFile: "solutions/check_isomorphic_strings.txt", link: "https://leetcode.com/problems/isomorphic-strings/" }
     ]
-    
-
   },
   {
     phase: "Linked Lists",
     questions: [
-      { title: "Reverse Linked List", difficulty: "easy", codeFile: "solutions/reverse_linked_list.txt" },
-      { title: "Cycle Detection", difficulty: "easy", codeFile: "solutions/cycle_detection.txt" },
-      { title: "Merge Two Sorted Lists", difficulty: "easy", codeFile: "solutions/merge_two_sorted_lists.txt" },
-      { title: "Remove N-th Node From End", difficulty: "medium", codeFile: "solutions/remove_nth_node_from_end.txt" },
-      { title: "Add Two Numbers", difficulty: "medium", codeFile: "solutions/add_two_numbers.txt" },
-      { title: "Copy List with Random Pointer", difficulty: "medium", codeFile: "solutions/copy_list_with_random_pointer.txt" },
-      { title: "Linked List Cycle II", difficulty: "medium", codeFile: "solutions/linked_list_cycle_ii.txt" },
-      { title: "Palindrome Linked List", difficulty: "easy", codeFile: "solutions/palindrome_linked_list.txt" },
-      { title: "Intersection of Two Linked Lists", difficulty: "easy", codeFile: "solutions/intersection_of_two_linked_lists.txt" },
-      { title: "Flatten a Multilevel Doubly Linked List", difficulty: "medium", codeFile: "solutions/flatten_multilevel_doubly_linked_list.txt" }
+      { title: "Reverse Linked List", difficulty: "easy", codeFile: "solutions/reverse_linked_list.txt", link: "https://leetcode.com/problems/reverse-linked-list/" },
+      { title: "Cycle Detection", difficulty: "easy", codeFile: "solutions/cycle_detection.txt", link: "https://leetcode.com/problems/linked-list-cycle/" },
+      { title: "Merge Two Sorted Lists", difficulty: "easy", codeFile: "solutions/merge_two_sorted_lists.txt", link: "https://leetcode.com/problems/merge-two-sorted-lists/" },
+      { title: "Remove N-th Node From End", difficulty: "medium", codeFile: "solutions/remove_nth_node_from_end.txt", link: "https://leetcode.com/problems/remove-nth-node-from-end-of-list/" },
+      { title: "Add Two Numbers", difficulty: "medium", codeFile: "solutions/add_two_numbers.txt", link: "https://leetcode.com/problems/add-two-numbers/" },
+      { title: "Copy List with Random Pointer", difficulty: "medium", codeFile: "solutions/copy_list_with_random_pointer.txt", link: "https://leetcode.com/problems/copy-list-with-random-pointer/" },
+      { title: "Linked List Cycle II", difficulty: "medium", codeFile: "solutions/linked_list_cycle_ii.txt", link: "https://leetcode.com/problems/linked-list-cycle-ii/" },
+      { title: "Palindrome Linked List", difficulty: "easy", codeFile: "solutions/palindrome_linked_list.txt", link: "https://leetcode.com/problems/palindrome-linked-list/" },
+      { title: "Intersection of Two Linked Lists", difficulty: "easy", codeFile: "solutions/intersection_of_two_linked_lists.txt", link: "https://leetcode.com/problems/intersection-of-two-linked-lists/" },
+      { title: "Flatten a Multilevel Doubly Linked List", difficulty: "medium", codeFile: "solutions/flatten_multilevel_doubly_linked_list.txt", link: "https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/" }
     ]
-    
   },
   {
     phase: "Stacks and Queues",
     questions: [
-      { title: "Valid Parentheses", difficulty: "easy", codeFile: "solutions/valid_parentheses.txt" },
-      { title: "Min Stack", difficulty: "medium", codeFile: "solutions/min_stack.txt" },
-      { title: "Evaluate Reverse Polish Notation", difficulty: "medium", codeFile: "solutions/evaluate_reverse_polish_notation.txt" },
-      { title: "Implement Queue using Stacks", difficulty: "easy", codeFile: "solutions/implement_queue_using_stacks.txt" },
-      { title: "Sliding Window Maximum", difficulty: "hard", codeFile: "solutions/sliding_window_maximum.txt" },
-      { title: "Daily Temperatures", difficulty: "medium", codeFile: "solutions/daily_temperatures.txt" },
-      { title: "Next Greater Element", difficulty: "medium", codeFile: "solutions/next_greater_element.txt" },
-      { title: "Design Circular Queue", difficulty: "medium", codeFile: "solutions/design_circular_queue.txt" },
-      { title: "Trapping Rain Water", difficulty: "hard", codeFile: "solutions/trapping_rain_water.txt" },
-      { title: "Largest Rectangle in Histogram", difficulty: "hard", codeFile: "solutions/largest_rectangle_in_histogram.txt" }
+      { title: "Valid Parentheses", difficulty: "easy", codeFile: "solutions/valid_parentheses.txt", link: "https://leetcode.com/problems/valid-parentheses/" },
+      { title: "Min Stack", difficulty: "medium", codeFile: "solutions/min_stack.txt", link: "https://leetcode.com/problems/min-stack/" },
+      { title: "Evaluate Reverse Polish Notation", difficulty: "medium", codeFile: "solutions/evaluate_reverse_polish_notation.txt", link: "https://leetcode.com/problems/evaluate-reverse-polish-notation/" },
+      { title: "Implement Queue using Stacks", difficulty: "easy", codeFile: "solutions/implement_queue_using_stacks.txt", link: "https://leetcode.com/problems/implement-queue-using-stacks/" },
+      { title: "Sliding Window Maximum", difficulty: "hard", codeFile: "solutions/sliding_window_maximum.txt", link: "https://leetcode.com/problems/sliding-window-maximum/" },
+      { title: "Daily Temperatures", difficulty: "medium", codeFile: "solutions/daily_temperatures.txt", link: "https://leetcode.com/problems/daily-temperatures/" },
+      { title: "Next Greater Element", difficulty: "medium", codeFile: "solutions/next_greater_element.txt", link: "https://leetcode.com/problems/next-greater-element-i/" },
+      { title: "Design Circular Queue", difficulty: "medium", codeFile: "solutions/design_circular_queue.txt", link: "https://leetcode.com/problems/design-circular-queue/" },
+      { title: "Trapping Rain Water", difficulty: "hard", codeFile: "solutions/trapping_rain_water.txt", link: "https://leetcode.com/problems/trapping-rain-water/" },
+      { title: "Largest Rectangle in Histogram", difficulty: "hard", codeFile: "solutions/largest_rectangle_in_histogram.txt", link: "https://leetcode.com/problems/largest-rectangle-in-histogram/" }
     ]
-    
   },
   {
     phase: "Trees",
     questions: [
-      { title: "Invert Binary Tree", difficulty: "easy", codeFile: "solutions/invert_binary_tree.txt" },
-      { title: "Maximum Depth of Binary Tree", difficulty: "easy", codeFile: "solutions/maximum_depth_of_binary_tree.txt" },
-      { title: "Diameter of Binary Tree", difficulty: "easy", codeFile: "solutions/diameter_of_binary_tree.txt" },
-      { title: "Balanced Binary Tree", difficulty: "easy", codeFile: "solutions/balanced_binary_tree.txt" },
-      { title: "Path Sum", difficulty: "easy", codeFile: "solutions/path_sum.txt" },
-      { title: "Same Tree", difficulty: "easy", codeFile: "solutions/same_tree.txt" },
-      { title: "Subtree of Another Tree", difficulty: "easy", codeFile: "solutions/subtree_of_another_tree.txt" },
-      { title: "Construct Binary Tree from Inorder and Preorder", difficulty: "medium", codeFile: "solutions/construct_tree_from_inorder_preorder.txt" },
-      { title: "Binary Tree Right Side View", difficulty: "medium", codeFile: "solutions/binary_tree_right_side_view.txt" },
-      { title: "Lowest Common Ancestor of BST", difficulty: "medium", codeFile: "solutions/lowest_common_ancestor_bst.txt" }
+      { title: "Invert Binary Tree", difficulty: "easy", codeFile: "solutions/invert_binary_tree.txt", link: "https://leetcode.com/problems/invert-binary-tree/" },
+      { title: "Maximum Depth of Binary Tree", difficulty: "easy", codeFile: "solutions/maximum_depth_of_binary_tree.txt", link: "https://leetcode.com/problems/maximum-depth-of-binary-tree/" },
+      { title: "Diameter of Binary Tree", difficulty: "easy", codeFile: "solutions/diameter_of_binary_tree.txt", link: "https://leetcode.com/problems/diameter-of-binary-tree/" },
+      { title: "Balanced Binary Tree", difficulty: "easy", codeFile: "solutions/balanced_binary_tree.txt", link: "https://leetcode.com/problems/balanced-binary-tree/" },
+      { title: "Path Sum", difficulty: "easy", codeFile: "solutions/path_sum.txt", link: "https://leetcode.com/problems/path-sum/" },
+      { title: "Same Tree", difficulty: "easy", codeFile: "solutions/same_tree.txt", link: "https://leetcode.com/problems/same-tree/" },
+      { title: "Subtree of Another Tree", difficulty: "easy", codeFile: "solutions/subtree_of_another_tree.txt", link: "https://leetcode.com/problems/subtree-of-another-tree/" },
+      { title: "Construct Binary Tree from Inorder and Preorder", difficulty: "medium", codeFile: "solutions/construct_tree_from_inorder_preorder.txt", link: "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" },
+      { title: "Binary Tree Right Side View", difficulty: "medium", codeFile: "solutions/binary_tree_right_side_view.txt", link: "https://leetcode.com/problems/binary-tree-right-side-view/" },
+      { title: "Lowest Common Ancestor of BST", difficulty: "medium", codeFile: "solutions/lowest_common_ancestor_bst.txt", link: "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" }
     ]
-    
   },
   {
     phase: "Graphs",
     questions: [
-      { title: "Clone Graph", difficulty: "medium", codeFile: "solutions/clone_graph.txt" },
-      { title: "Number of Islands", difficulty: "medium", codeFile: "solutions/number_of_islands.txt" },
-      { title: "Course Schedule", difficulty: "medium", codeFile: "solutions/course_schedule.txt" },
-      { title: "Pacific Atlantic Water Flow", difficulty: "medium", codeFile: "solutions/pacific_atlantic_water_flow.txt" },
-      { title: "Word Ladder", difficulty: "hard", codeFile: "solutions/word_ladder.txt" },
-      { title: "Minimum Spanning Tree", difficulty: "medium", codeFile: "solutions/minimum_spanning_tree.txt" },
-      { title: "Dijkstra’s Algorithm", difficulty: "medium", codeFile: "solutions/dijkstras_algorithm.txt" },
-      { title: "Topological Sort", difficulty: "medium", codeFile: "solutions/topological_sort.txt" },
-      { title: "Graph Valid Tree", difficulty: "medium", codeFile: "solutions/graph_valid_tree.txt" },
-      { title: "Detect Cycle in Graph", difficulty: "medium", codeFile: "solutions/detect_cycle_in_graph.txt" }
+      { title: "Clone Graph", difficulty: "medium", codeFile: "solutions/clone_graph.txt", link: "https://leetcode.com/problems/clone-graph/" },
+      { title: "Number of Islands", difficulty: "medium", codeFile: "solutions/number_of_islands.txt", link: "https://leetcode.com/problems/number-of-islands/" },
+      { title: "Course Schedule", difficulty: "medium", codeFile: "solutions/course_schedule.txt", link: "https://leetcode.com/problems/course-schedule/" },
+      { title: "Pacific Atlantic Water Flow", difficulty: "medium", codeFile: "solutions/pacific_atlantic_water_flow.txt", link: "https://leetcode.com/problems/pacific-atlantic-water-flow/" },
+      { title: "Word Ladder", difficulty: "hard", codeFile: "solutions/word_ladder.txt", link: "https://leetcode.com/problems/word-ladder/" },
+      { title: "Minimum Spanning Tree", difficulty: "medium", codeFile: "solutions/minimum_spanning_tree.txt", link: "https://leetcode.com/problems/min-cost-to-connect-all-points/" },
+      { title: "Dijkstra’s Algorithm", difficulty: "medium", codeFile: "solutions/dijkstras_algorithm.txt", link: "" },
+      { title: "Topological Sort", difficulty: "medium", codeFile: "solutions/topological_sort.txt", link: "" },
+      { title: "Graph Valid Tree", difficulty: "medium", codeFile: "solutions/graph_valid_tree.txt", link: "https://leetcode.com/problems/graph-valid-tree/" },
+      { title: "Detect Cycle in Graph", difficulty: "medium", codeFile: "solutions/detect_cycle_in_graph.txt", link: "" }
     ]
-    
   },
-  {
-    phase: "Greedy",
-    questions: [
-      { title: "Jump Game", difficulty: "medium", codeFile: "solutions/jump_game.txt" },
-      { title: "Gas Station", difficulty: "medium", codeFile: "solutions/gas_station.txt" },
-      { title: "Candy Distribution", difficulty: "hard", codeFile: "solutions/candy_distribution.txt" },
-      { title: "Non-overlapping Intervals", difficulty: "medium", codeFile: "solutions/non_overlapping_intervals.txt" },
-      { title: "Insert Interval", difficulty: "medium", codeFile: "solutions/insert_interval.txt" },
-      { title: "Minimum Number of Arrows to Burst Balloons", difficulty: "medium", codeFile: "solutions/min_arrows_to_burst_balloons.txt" },
-      { title: "Partition Labels", difficulty: "medium", codeFile: "solutions/partition_labels.txt" },
-      { title: "Greedy Florist", difficulty: "easy", codeFile: "solutions/greedy_florist.txt" },
-      { title: "Activity Selection Problem", difficulty: "easy", codeFile: "solutions/activity_selection_problem.txt" },
-      { title: "Job Sequencing Problem", difficulty: "medium", codeFile: "solutions/job_sequencing_problem.txt" }
-    ]
-    
-  },
-  {
-    phase: "Backtracking",
-    questions: [
-      { title: "Subset Sum", difficulty: "medium", codeFile: "solutions/subset_sum.txt" },
-      { title: "Permutations", difficulty: "medium", codeFile: "solutions/permutations.txt" },
-      { title: "Combination Sum", difficulty: "medium", codeFile: "solutions/combination_sum.txt" },
-      { title: "Sudoku Solver", difficulty: "hard", codeFile: "solutions/sudoku_solver.txt" },
-      { title: "N-Queens", difficulty: "hard", codeFile: "solutions/n_queens.txt" },
-      { title: "Word Search", difficulty: "medium", codeFile: "solutions/word_search.txt" },
-      { title: "Letter Combinations of a Phone Number", difficulty: "medium", codeFile: "solutions/letter_combinations_phone_number.txt" },
-      { title: "Generate Parentheses", difficulty: "medium", codeFile: "solutions/generate_parentheses.txt" },
-      { title: "Palindrome Partitioning", difficulty: "medium", codeFile: "solutions/palindrome_partitioning.txt" },
-      { title: "Rat in a Maze", difficulty: "medium", codeFile: "solutions/rat_in_a_maze.txt" }
-    ]
-    
-  },
-  {
-    phase: "Dynamic Programming",
-    questions: [
-      { title: "Fibonacci Number", difficulty: "easy", codeFile: "solutions/fibonacci_number.txt" },
-      { title: "Climbing Stairs", difficulty: "easy", codeFile: "solutions/climbing_stairs.txt" },
-      { title: "House Robber", difficulty: "medium", codeFile: "solutions/house_robber.txt" },
-      { title: "Longest Increasing Subsequence", difficulty: "medium", codeFile: "solutions/longest_increasing_subsequence.txt" },
-      { title: "Coin Change", difficulty: "medium", codeFile: "solutions/coin_change.txt" },
-      { title: "Edit Distance", difficulty: "hard", codeFile: "solutions/edit_distance.txt" },
-      { title: "0/1 Knapsack", difficulty: "medium", codeFile: "solutions/zero_one_knapsack.txt" },
-      { title: "Longest Common Subsequence", difficulty: "medium", codeFile: "solutions/longest_common_subsequence.txt" },
-      { title: "Partition Equal Subset Sum", difficulty: "medium", codeFile: "solutions/partition_equal_subset_sum.txt" },
-      { title: "Unique Paths", difficulty: "medium", codeFile: "solutions/unique_paths.txt" }
-    ]
-    
-  },
-  {
-    phase: "Bit Manipulation",
-    questions: [
-      { title: "Single Number", difficulty: "easy", codeFile: "solutions/single_number.txt" },
-      { title: "Number of 1 Bits", difficulty: "easy", codeFile: "solutions/number_of_1_bits.txt" },
-      { title: "Counting Bits", difficulty: "medium", codeFile: "solutions/counting_bits.txt" },
-      { title: "Reverse Bits", difficulty: "easy", codeFile: "solutions/reverse_bits.txt" },
-      { title: "Missing Number", difficulty: "easy", codeFile: "solutions/missing_number.txt" },
-      { title: "Sum of Two Integers", difficulty: "medium", codeFile: "solutions/sum_of_two_integers.txt" },
-      { title: "Power of Two", difficulty: "easy", codeFile: "solutions/power_of_two.txt" },
-      { title: "Find the Duplicate Number", difficulty: "medium", codeFile: "solutions/find_the_duplicate_number.txt" },
-      { title: "Divide Two Integers", difficulty: "medium", codeFile: "solutions/divide_two_integers.txt" },
-      { title: "Bitwise AND of Numbers Range", difficulty: "medium", codeFile: "solutions/bitwise_and_of_numbers_range.txt" }
-    ]
-    
-  }
+{
+  phase: "Greedy",
+  questions: [
+    { title: "Jump Game", difficulty: "medium", codeFile: "solutions/jump_game.txt", link: "https://leetcode.com/problems/jump-game/" },
+    { title: "Gas Station", difficulty: "medium", codeFile: "solutions/gas_station.txt", link: "https://leetcode.com/problems/gas-station/" },
+    { title: "Candy Distribution", difficulty: "hard", codeFile: "solutions/candy_distribution.txt", link: "https://leetcode.com/problems/candy/" },
+    { title: "Non-overlapping Intervals", difficulty: "medium", codeFile: "solutions/non_overlapping_intervals.txt", link: "https://leetcode.com/problems/non-overlapping-intervals/" },
+    { title: "Insert Interval", difficulty: "medium", codeFile: "solutions/insert_interval.txt", link: "https://leetcode.com/problems/insert-interval/" },
+    { title: "Minimum Number of Arrows to Burst Balloons", difficulty: "medium", codeFile: "solutions/min_arrows_to_burst_balloons.txt", link: "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/" },
+    { title: "Partition Labels", difficulty: "medium", codeFile: "solutions/partition_labels.txt", link: "https://leetcode.com/problems/partition-labels/" },
+    { title: "Greedy Florist", difficulty: "easy", codeFile: "solutions/greedy_florist.txt", link: "" },
+    { title: "Activity Selection Problem", difficulty: "easy", codeFile: "solutions/activity_selection_problem.txt", link: "" },
+    { title: "Job Sequencing Problem", difficulty: "medium", codeFile: "solutions/job_sequencing_problem.txt", link: "" }
+  ]
+},
+{
+  phase: "Backtracking",
+  questions: [
+    { title: "Subset Sum", difficulty: "medium", codeFile: "solutions/subset_sum.txt", link: "" },
+    { title: "Permutations", difficulty: "medium", codeFile: "solutions/permutations.txt", link: "https://leetcode.com/problems/permutations/" },
+    { title: "Combination Sum", difficulty: "medium", codeFile: "solutions/combination_sum.txt", link: "https://leetcode.com/problems/combination-sum/" },
+    { title: "Sudoku Solver", difficulty: "hard", codeFile: "solutions/sudoku_solver.txt", link: "https://leetcode.com/problems/sudoku-solver/" },
+    { title: "N-Queens", difficulty: "hard", codeFile: "solutions/n_queens.txt", link: "https://leetcode.com/problems/n-queens/" },
+    { title: "Word Search", difficulty: "medium", codeFile: "solutions/word_search.txt", link: "https://leetcode.com/problems/word-search/" },
+    { title: "Letter Combinations of a Phone Number", difficulty: "medium", codeFile: "solutions/letter_combinations_phone_number.txt", link: "https://leetcode.com/problems/letter-combinations-of-a-phone-number/" },
+    { title: "Generate Parentheses", difficulty: "medium", codeFile: "solutions/generate_parentheses.txt", link: "https://leetcode.com/problems/generate-parentheses/" },
+    { title: "Palindrome Partitioning", difficulty: "medium", codeFile: "solutions/palindrome_partitioning.txt", link: "https://leetcode.com/problems/palindrome-partitioning/" },
+    { title: "Rat in a Maze", difficulty: "medium", codeFile: "solutions/rat_in_a_maze.txt", link: "" }
+  ]
+},
+{
+  phase: "Dynamic Programming",
+  questions: [
+    { title: "Fibonacci Number", difficulty: "easy", codeFile: "solutions/fibonacci_number.txt", link: "https://leetcode.com/problems/fibonacci-number/" },
+    { title: "Climbing Stairs", difficulty: "easy", codeFile: "solutions/climbing_stairs.txt", link: "https://leetcode.com/problems/climbing-stairs/" },
+    { title: "House Robber", difficulty: "medium", codeFile: "solutions/house_robber.txt", link: "https://leetcode.com/problems/house-robber/" },
+    { title: "Longest Increasing Subsequence", difficulty: "medium", codeFile: "solutions/longest_increasing_subsequence.txt", link: "https://leetcode.com/problems/longest-increasing-subsequence/" },
+    { title: "Coin Change", difficulty: "medium", codeFile: "solutions/coin_change.txt", link: "https://leetcode.com/problems/coin-change/" },
+    { title: "Edit Distance", difficulty: "hard", codeFile: "solutions/edit_distance.txt", link: "https://leetcode.com/problems/edit-distance/" },
+    { title: "0/1 Knapsack", difficulty: "medium", codeFile: "solutions/zero_one_knapsack.txt", link: "" },
+    { title: "Longest Common Subsequence", difficulty: "medium", codeFile: "solutions/longest_common_subsequence.txt", link: "https://leetcode.com/problems/longest-common-subsequence/" },
+    { title: "Partition Equal Subset Sum", difficulty: "medium", codeFile: "solutions/partition_equal_subset_sum.txt", link: "https://leetcode.com/problems/partition-equal-subset-sum/" },
+    { title: "Unique Paths", difficulty: "medium", codeFile: "solutions/unique_paths.txt", link: "https://leetcode.com/problems/unique-paths/" }
+  ]
+},
+{
+  phase: "Bit Manipulation",
+  questions: [
+    { title: "Single Number", difficulty: "easy", codeFile: "solutions/single_number.txt", link: "https://leetcode.com/problems/single-number/" },
+    { title: "Number of 1 Bits", difficulty: "easy", codeFile: "solutions/number_of_1_bits.txt", link: "https://leetcode.com/problems/number-of-1-bits/" },
+    { title: "Counting Bits", difficulty: "medium", codeFile: "solutions/counting_bits.txt", link: "https://leetcode.com/problems/counting-bits/" },
+    { title: "Reverse Bits", difficulty: "easy", codeFile: "solutions/reverse_bits.txt", link: "https://leetcode.com/problems/reverse-bits/" },
+    { title: "Missing Number", difficulty: "easy", codeFile: "solutions/missing_number.txt", link: "https://leetcode.com/problems/missing-number/" },
+    { title: "Sum of Two Integers", difficulty: "medium", codeFile: "solutions/sum_of_two_integers.txt", link: "https://leetcode.com/problems/sum-of-two-integers/" },
+    { title: "Power of Two", difficulty: "easy", codeFile: "solutions/power_of_two.txt", link: "https://leetcode.com/problems/power-of-two/" },
+    { title: "Find the Duplicate Number", difficulty: "medium", codeFile: "solutions/find_the_duplicate_number.txt", link: "https://leetcode.com/problems/find-the-duplicate-number/" },
+    { title: "Divide Two Integers", difficulty: "medium", codeFile: "solutions/divide_two_integers.txt", link: "https://leetcode.com/problems/divide-two-integers/" },
+    { title: "Bitwise AND of Numbers Range", difficulty: "medium", codeFile: "solutions/bitwise_and_of_numbers_range.txt", link: "https://leetcode.com/problems/bitwise-and-of-numbers-range/" }
+  ]
+}
   
 ];
 
@@ -530,14 +525,50 @@
         pre.textContent = codeFile || "No solution available.";
       }
     }
+
+  function handleFilterChange() {
+  const filter = document.getElementById('filter').value;
+  const select = document.getElementById('filter');
+  const box = document.getElementById('filter-box');
+
+  // Reset all styles first
+  select.classList.remove('border-green-500', 'border-yellow-400', 'border-red-500', 'text-green-400', 'text-yellow-300', 'text-red-400');
+  box.classList.remove('shadow-[0_0_30px_5px_rgba(34,197,94,0.4)]', 'shadow-[0_0_30px_5px_rgba(234,179,8,0.4)]', 'shadow-[0_0_30px_5px_rgba(239,68,68,0.4)]');
+
+  if (filter === 'easy') {
+    select.classList.add('border-green-500', 'text-green-400');
+    box.classList.add('shadow-[0_0_30px_5px_rgba(34,197,94,0.4)]');
+  } else if (filter === 'medium') {
+    select.classList.add('border-yellow-400', 'text-yellow-300');
+    box.classList.add('shadow-[0_0_30px_5px_rgba(234,179,8,0.4)]');
+  } else if (filter === 'hard') {
+    select.classList.add('border-red-500', 'text-red-400');
+    box.classList.add('shadow-[0_0_30px_5px_rgba(239,68,68,0.4)]');
+  } else {
+    select.classList.add('border-green-500', 'text-white');
+    box.classList.add('shadow-[0_0_30px_5px_rgba(34,197,94,0.4)]');
+  }
+
+  renderFiltered(); // update question list
+}
+
     
     
-    function toggleSolved(id) {
-      const solved = JSON.parse(localStorage.getItem('solved') || '{}');
-      solved[id] = !solved[id];
-      localStorage.setItem('solved', JSON.stringify(solved));
-      renderFiltered();
-    }
+function toggleSolved(id) {
+  const solved = JSON.parse(localStorage.getItem('solved') || '{}');
+  solved[id] = !solved[id];
+  localStorage.setItem('solved', JSON.stringify(solved));
+  renderFiltered();
+
+  // ✅ Firestore Sync
+  const user = firebase.auth().currentUser;
+  if (user) {
+    firebase.firestore().collection('users').doc(user.uid).set({
+      solved: solved
+    }, { merge: true });
+  }
+}
+
     
     function updateSolvedCount() {
       const solved = JSON.parse(localStorage.getItem('solved') || '{}');
@@ -574,7 +605,7 @@
     !solved[id]
       ? `<span>
            <button class="text-white font-medium hover:underline" onclick='window.open("${q.link}", "_blank")'>${q.title}</button>
-           <button class="action-btn view-btn ml-2 text-sm px-2 py-1" onclick='window.open("${q.link}", "_blank")'>View</button>
+           <button class="action-btn view-btn ml-2 text-sm px-2 py-1" onclick='window.open("${q.link}", "_blank")'>solve</button>
          </span>`
       : `<span class="text-white font-medium">${q.title}</span>`
   }
@@ -605,40 +636,9 @@
       document.getElementById("register-form").classList.remove("hidden");
     }
     
-    function register() {
-      const email = document.getElementById("reg-email").value;
-      const password = document.getElementById("reg-password").value;
-      
-      if (!email || !password) return alert("Please fill all fields.");
-      
-      auth.createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        alert("Account created! Please log in.");
-        switchToLogin();
-      })
-        .catch((error) => {
-          alert("Registration Error: " + error.message);
-        });
-      }
 
-      function login() {
-        const email = document.getElementById("login-email").value;
-        const password = document.getElementById("login-password").value;
-        
-        if (!email || !password) return alert("Please fill all fields.");
-        
-        auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          document.getElementById("auth-section").style.display = "none";
-          document.querySelector("main").style.display = "block";
-          document.getElementById("welcome-user").textContent = `Hello, ${user.email}`;
-          renderFiltered();
-        })
-        .catch((error) => {
-          alert("Login Error: " + error.message);
-        });
-    }
+
+
     
     function logout() {
       auth.signOut().then(() => {
@@ -646,7 +646,7 @@
       });
     }
     
-    // Initialize the app
+      // Initialize the app
     document.addEventListener("DOMContentLoaded", () => {
       auth.onAuthStateChanged((user) => {
         if (user) {
@@ -659,15 +659,6 @@
         }
       });
 
-      // Cursor effect
-      document.addEventListener('mousemove', (e) => {
-        const dot = document.createElement('div');
-        dot.classList.add('cursor-dot');
-        dot.style.left = `${e.clientX}px`;
-        dot.style.top = `${e.clientY}px`;
-        document.body.appendChild(dot);
-        setTimeout(() => dot.remove(), 600);
-      });
     });
     </script>
 </body>
