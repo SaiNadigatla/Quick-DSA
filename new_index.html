@@ -40,9 +40,9 @@
 
 
     .created-by {
-      font-size: 0.875rem; /* text-sm */
+      font-size: 0.875rem; 
       font-style: italic;
-      background: linear-gradient(to right, #007cf0, #00df9a); /* Blue to Green */
+      background: linear-gradient(to right, #007cf0, #00df9a); 
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -61,13 +61,13 @@
     .gradient-heading {
       color: transparent;
       font-weight: bold;
-      margin-bottom: 1.5rem; /* mb-6 */
+      margin-bottom: 1.5rem; 
       text-align: center;
-      background: linear-gradient(to right, #90ee90, #d4fcd4); /* Light green to lightest green */
+      background: linear-gradient(to right, #90ee90, #d4fcd4); 
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      font-size: 2.25rem; /* text-4xl */
+      font-size: 2.25rem; 
     }
     .gradient-heading:hover {
   text-shadow: 0 0 15px #d4fcd4;
@@ -76,24 +76,17 @@
 .view-btn {
   background: linear-gradient(to right, #d138d4, #e7a431);
   color: white;
-  padding: 0.25rem 0.5rem; /* Smaller padding */
-  font-size: 0.75rem;      /* Match text-sm */
+  padding: 0.25rem 0.5rem; 
+  font-size: 0.75rem;      
   border-radius: 0.375rem;
   line-height: 0.45rem;
   transition: all 0.2s ease-in-out;
 }
 
-.view-btn:hover {
-  background: linear-gradient(to right, #2563eb, #3b82f6);
-  transform: scale(1.05);
-}
-
-
-
-
-
-
-
+  .view-btn:hover {
+    background: linear-gradient(to right, #2563eb, #3b82f6);
+    transform: scale(1.05);
+  }
 
     .navbar {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -141,7 +134,7 @@
       border-radius: 0.5rem;
       font-weight: 600;
     }
-
+    .menu { background: linear-gradient(to right, #68dbd7, #19cc75); color: #ecfdf5; }
     .easy { background: linear-gradient(to right, #268eef, #19cc75); color: #ecfdf5; }
     .medium { background: linear-gradient(to right, #19cc75, #6a0dad); color: #fff7ed; }
     .hard { background: linear-gradient(to right, #6a0dad, #ad0d7d); color: #fdf4ff; }
@@ -185,16 +178,68 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
 
-  <nav class="navbar bg-gray-900 text-white p-4 sticky top-0 z-50 border-b border-gray-800">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-green-400">🌌 DSA Roadmap</h1>
-        <div class="flex items-center space-x-4">
-        <button onclick="toggleTheme()" class="text-sm gradient-toggle text-white px-3 py-1 rounded">Toggle Theme</button>
-        <button onclick="logout()" class="text-sm gradient-logout text-white px-3 py-1 rounded">Logout</button>
-        <span id="welcome-user" class="text-sm text-gray-300 ml-4"></span>
+
+
+<!-- Sidebar -->
+<div id="sidebar" class="fixed top-0 left-0 h-full w-72 transform -translate-x-full transition-transform duration-300 z-50">
+  <div class="card bg-gray-800 pt-20 px-6 rounded-2xl border border-gray-700 shadow-md h-full">
+    <h2 class="text-xl font-bold text-green-400 mb-6">📘 Resources</h2>
+<div class="space-y-8">
+  <button onclick="toggleSidebar()" class="w-full text-white py-2 px-4 rounded text-left bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-md">
+    📚 DSA Quick Course
+  </button>
+
+  <button onclick="window.open('https://www.youtube.com/watch?v=0bHoB32fuj0&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz', '_blank')" class="w-full text-white py-2 px-4 rounded text-left bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 shadow-md">
+    🎥 DSA YouTube
+  </button>
+
+  <button onclick="window.open('new_index.html')" class="w-full text-white py-2 px-4 rounded text-left bg-gradient-to-r from-green-500 to-lime-500 hover:from-green-600 hover:to-lime-600 shadow-md">
+    📝 DSA Practice
+  </button>
+
+  <button onclick="window.open('https://www.programiz.com/cpp-programming/online-compiler/', '_blank')" class="w-full text-white py-2 px-4 rounded text-left bg-gradient-to-r from-yellow-500 to-red-500 hover:from-yellow-600 hover:to-red-600 shadow-md">
+    💻 Practice Editor
+  </button>
+</div>
+
+  </div>
+</div>
+
+<!-- Overlay (clicking this closes the sidebar) -->
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="toggleSidebar()"></div>
+
+
+  <!-- 🔲 Overlay that dims background when sidebar is open -->
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="toggleSidebar()"></div>
+
+  <!-- 🌐 Your main page content here -->
+  <div id="main-content">
+    <!-- Navbar, content, etc. -->
+  </div>
+
+<nav class="navbar bg-gray-900 text-white p-4 sticky top-0 z-50 border-b border-gray-800">  
+  <div class="max-w-6xl mx-auto flex justify-between items-center">
+    <div class="flex items-center space-x-4">
+      <!-- Menu Button -->
+      <button onclick="toggleSidebar()" class="text-white px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">
+        ☰ Menu
+      </button>
+      <h1 class="text-2xl font-bold text-green-400">🌌 DSA Roadmap</h1>
     </div>
+
+    <div class="flex items-center space-x-4">
+      <button onclick="toggleTheme()" class="text-sm gradient-toggle text-white px-3 py-1 rounded">Toggle Theme</button>
+      <button onclick="logout()" class="text-sm gradient-logout text-white px-3 py-1 rounded">Logout</button>
+      <span id="welcome-user" class="text-sm text-gray-300 ml-4"></span>
     </div>
-  </nav>
+  </div>
+</nav>
+
+
+
+
+
+
 
   <div id="auth-section" class="max-w-md mx-auto mt-10 bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-md text-center">
     <h2 class="text-2xl font-bold text-green-400 mb-4">🔐 Welcome to DSA Roadmap</h2>
@@ -218,40 +263,42 @@
       
 
   <main class="max-w-5xl mx-auto p-6">
-    <h2 class="gradient-heading">🧠 Complete DSA Preparation</h2>
+    <h2 class="gradient-heading">🧠 Quick DSA Preparation</h2>
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-4">
-<div id="filter-box" class="p-4 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border shadow-[0_0_30px_5px_rgba(34,197,94,0.4)] transition-all duration-300">
-  <label for="filter" class="block text-lg font-semibold mb-2 text-green-300 tracking-wide">🔥 Filter by Difficulty:</label>
-  <select id="filter" class="w-full text-white bg-gray-700 p-3 rounded-lg border border-green-500 focus:outline-none font-medium shadow-inner transition-all duration-300" onchange="handleFilterChange()">
-    <option value="all">All Problems</option>
-    <option value="easy">Easy</option>
-    <option value="medium">Medium</option>
-    <option value="hard">Hard</option>
-  </select>
-</div>
+        <div id="filter-box" class="p-4 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border shadow-[0_0_30px_5px_rgba(34,197,94,0.4)] transition-all duration-300">
+          <label for="filter" class="block text-lg font-semibold mb-2 text-green-300 tracking-wide">🔥 Filter by Difficulty:</label>
+          <select id="filter" class="w-full text-white bg-gray-700 p-3 rounded-lg border border-green-500 focus:outline-none font-medium shadow-inner transition-all duration-300" onchange="handleFilterChange()">
+            <option value="all">All Problems</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
 
 
         <div class="text-sm text-gray-400">
           <div class="w-20 h-20 mx-auto" id="overall-progress"></div>
         </div>
-      </div>
-      <div class="flex space-x-2">
-        <div class="created-by">– created by Sai Nadigatla</div>
-      </div>
+        <label style="color: #10B981; font-weight: 600;">Progress</label>
+
+        </div>
+        <div class="flex space-x-2">
+          <div class="created-by">Built with ❤️ by Sai Nadigatla</div>
+        </div>
     </div>
 
     <div id="phases" class="space-y-6"></div>
   </main>
 
-<!-- Firebase SDKs (compat version) -->
+    <!-- Firebase SDKs (compat version) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // ✅ Your Firebase configuration
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyDtMlrxGSMTdAXJIYiNhXoyfP6PmPvTubs",
     authDomain: "dsa-roadmap-fa36c.firebaseapp.com",
@@ -259,19 +306,18 @@
     appId: "1:765605112099:web:34c72e49fc3f77058fc496"
   };
 
-  // ✅ Initialize Firebase and get references
+  // Initialize Firebase and get references
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  // ✅ Handle login status
   auth.onAuthStateChanged((user) => {
     if (!user) {
-      window.location.href = "login.html"; // Redirect to login if not logged in
+      window.location.href = "login.html"; // Redirect to login ...
     } else {
       document.getElementById("welcome-user").innerText = `Welcome, ${user.email}`;
 
-      // Load user's solved data from Firestore
+      // Load user's solved data from Firestor-e
       db.collection('users').doc(user.uid).get().then((doc) => {
         if (doc.exists) {
           localStorage.setItem('solved', JSON.stringify(doc.data().solved || {}));
@@ -285,7 +331,7 @@
 
 
   <script>
-    // Your DSA roadmap data
+    //  DSA ro.admap data..
     const data = [
   {
     phase: "Arrays",
@@ -300,7 +346,7 @@
       title: "Kadane's Algorithm",
       difficulty: "medium",
       codeFile: "solutions/kadanes_algorithm.txt",
-      link: "https://leetcode.com/problems/maximum-subarray/" // Kadane's Algorithm problem
+      link: "https://leetcode.com/problems/maximum-subarray/"
     },
     {
       title: "Merge Intervals",
@@ -492,6 +538,21 @@
   
 ];
 
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const isClosed = sidebar.classList.contains('-translate-x-full');
+
+    if (isClosed) {
+      sidebar.classList.remove('-translate-x-full');
+      overlay.classList.remove('hidden');
+    } else {
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.add('hidden');
+    }
+  }
+
+
 
 
     function toggleTheme() {
@@ -563,7 +624,7 @@ function toggleSolved(id) {
   localStorage.setItem('solved', JSON.stringify(solved));
   renderFiltered();
 
-  // ✅ Firestore Sync
+
   const user = firebase.auth().currentUser;
   if (user) {
     firebase.firestore().collection('users').doc(user.uid).set({
@@ -584,7 +645,7 @@ function updateSolvedCount() {
   const container = document.getElementById('overall-progress');
   container.innerHTML = ''; // Clear previous circle
   const circle = new ProgressBar.Circle(container, {
-    color: "#22c55e",
+    color: "#c27005",
     trailColor: "#2d3748",
     strokeWidth: 6,
     trailWidth: 6,
