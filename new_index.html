@@ -183,6 +183,8 @@
 </head>
 
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+
   <nav class="navbar bg-gray-900 text-white p-4 sticky top-0 z-50 border-b border-gray-800">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
         <h1 class="text-2xl font-bold text-green-400">🌌 DSA Roadmap</h1>
@@ -213,6 +215,7 @@
       </div>
     </div>
   </div>
+      
 
   <main class="max-w-5xl mx-auto p-6">
     <h2 class="gradient-heading">🧠 Complete DSA Preparation</h2>
@@ -231,7 +234,7 @@
 
 
         <div class="text-sm text-gray-400">
-          <span id="solvedCount">0</span> problems solved
+          <div class="w-20 h-20 mx-auto" id="overall-progress"></div>
         </div>
       </div>
       <div class="flex space-x-2">
@@ -570,10 +573,49 @@ function toggleSolved(id) {
 }
 
     
-    function updateSolvedCount() {
-      const solved = JSON.parse(localStorage.getItem('solved') || '{}');
-      document.getElementById('solvedCount').textContent = Object.values(solved).filter(Boolean).length;
+function updateSolvedCount() {
+  const solved = JSON.parse(localStorage.getItem('solved') || '{}');
+  const solvedCount = Object.values(solved).filter(Boolean).length;
+
+  // Count total questions from global `data`
+  let totalCount = 0;
+  data.forEach(phase => totalCount += phase.questions.length);
+
+  const container = document.getElementById('overall-progress');
+  container.innerHTML = ''; // Clear previous circle
+  const circle = new ProgressBar.Circle(container, {
+    color: "#22c55e",
+    trailColor: "#2d3748",
+    strokeWidth: 6,
+    trailWidth: 6,
+    duration: 1000,
+    easing: "easeInOut",
+    text: {
+      value: '', // start empty
+      style: {
+        color: '#ffffff',
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        padding: 0,
+        margin: 0,
+        transform: 'translate(-50%, -50%)',
+        'font-size': '0.9rem',
+        'font-weight': 'bold'
+      }
+    },
+    from: { color: "#22c55e" },
+    to: { color: "#22c55e" },
+    step: function (_, circle) {
+      circle.setText(`${solvedCount}/${totalCount}`);
     }
+  });
+  
+
+
+  circle.animate(totalCount === 0 ? 0 : solvedCount / totalCount);
+}
+
     
     function renderFiltered() {
       const filter = document.getElementById('filter').value;
@@ -601,14 +643,15 @@ function toggleSolved(id) {
           const item = document.createElement("div");
           item.className = `question-item ${solved[id] ? 'solved' : ''}`;
           item.innerHTML = `
-  ${
-    !solved[id]
-      ? `<span>
-           <button class="text-white font-medium hover:underline" onclick='window.open("${q.link}", "_blank")'>${q.title}</button>
-           <button class="action-btn view-btn ml-2 text-sm px-2 py-1" onclick='window.open("${q.link}", "_blank")'>solve</button>
-         </span>`
-      : `<span class="text-white font-medium">${q.title}</span>`
-  }
+              ${
+            !solved[id]
+            ? `<span>
+              <button class="text-white font-medium hover:underline" onclick='window.open("${q.link}", "_blank")'>${q.title}</button>
+              <button class="action-btn view-btn ml-2 text-sm px-2 py-1" onclick='window.open("${q.link}", "_blank")'>solve</button>
+              </span>`
+              : `<span class="text-white font-medium">${q.title}</span>`
+              }
+              
             <span class="difficulty-badge ${q.difficulty}">${q.difficulty}</span>
             <button class="action-btn solution-btn" onclick='showSolution(${JSON.stringify(q.code || q.codeFile || "")})'>Solution</button>
             <button class="action-btn ${solved[id] ? 'undo-btn' : 'mark-btn'}" onclick='toggleSolved("${id}")'>
