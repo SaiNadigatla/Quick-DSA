@@ -73,6 +73,21 @@
   text-shadow: 0 0 15px #d4fcd4;
 }
 
+.view-btn {
+  background: linear-gradient(to right, #d138d4, #e7a431);
+  color: white;
+  padding: 0.25rem 0.5rem; /* Smaller padding */
+  font-size: 0.75rem;      /* Match text-sm */
+  border-radius: 0.375rem;
+  line-height: 0.45rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.view-btn:hover {
+  background: linear-gradient(to right, #2563eb, #3b82f6);
+  transform: scale(1.05);
+}
+
 
 
 
@@ -260,24 +275,75 @@
     const auth = firebase.auth();
   </script>
 
+
   <script>
     // Your DSA roadmap data
     const data = [
   {
     phase: "Arrays",
     questions: [
-      { title: "Two Sum", difficulty: "easy", codeFile: "solutions/two_sum.txt" },
-      { title: "Kadane's Algorithm", difficulty: "medium", codeFile: "solutions/kadanes_algorithm.txt" },
-      { title: "Merge Intervals", difficulty: "medium", codeFile: "solutions/merge_intervals.txt" },
-      { title: "Buy and Sell Stock", difficulty: "easy", codeFile: "solutions/buy_and_sell_stock.txt" },
-      { title: "Missing Number", difficulty: "easy", codeFile: "solutions/missing_number.txt" },
-      { title: "Rotate Array", difficulty: "medium", codeFile: "solutions/rotate_array.txt" },
-      { title: "Maximum Subarray", difficulty: "easy", codeFile: "solutions/maximum_subarray.txt" },
-      { title: "Product of Array Except Self", difficulty: "medium", codeFile: "solutions/product_except_self.txt" },
-      { title: "Find Duplicate Number", difficulty: "medium", codeFile: "solutions/find_duplicate_number.txt" },
-      { title: "Set Matrix Zeroes", difficulty: "medium", codeFile: "solutions/set_matrix_zeroes.txt" }
-    ]
-    
+    {
+      title: "Two Sum",
+      difficulty: "easy",
+      codeFile: "solutions/two_sum.txt",
+      link: "https://leetcode.com/problems/two-sum/"
+    },
+    {
+      title: "Kadane's Algorithm",
+      difficulty: "medium",
+      codeFile: "solutions/kadanes_algorithm.txt",
+      link: "https://leetcode.com/problems/maximum-subarray/" // Kadane's Algorithm problem
+    },
+    {
+      title: "Merge Intervals",
+      difficulty: "medium",
+      codeFile: "solutions/merge_intervals.txt",
+      link: "https://leetcode.com/problems/merge-intervals/"
+    },
+    {
+      title: "Buy and Sell Stock",
+      difficulty: "easy",
+      codeFile: "solutions/buy_and_sell_stock.txt",
+      link: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"
+    },
+    {
+      title: "Missing Number",
+      difficulty: "easy",
+      codeFile: "solutions/missing_number.txt",
+      link: "https://leetcode.com/problems/missing-number/"
+    },
+  {
+    title: "Rotate Array",
+    difficulty: "medium",
+    codeFile: "solutions/rotate_array.txt",
+    link: "https://leetcode.com/problems/rotate-array/"
+  },
+  {
+    title: "Maximum Subarray",
+    difficulty: "easy",
+    codeFile: "solutions/maximum_subarray.txt",
+    link: "https://leetcode.com/problems/maximum-subarray/"
+  },
+  {
+    title: "Product of Array Except Self",
+    difficulty: "medium",
+    codeFile: "solutions/product_except_self.txt",
+    link: "https://leetcode.com/problems/product-of-array-except-self/"
+  },
+  {
+    title: "Find Duplicate Number",
+    difficulty: "medium",
+    codeFile: "solutions/find_duplicate_number.txt",
+    link: "https://leetcode.com/problems/find-the-duplicate-number/"
+  },
+  {
+    title: "Set Matrix Zeroes",
+    difficulty: "medium",
+    codeFile: "solutions/set_matrix_zeroes.txt",
+    link: "https://leetcode.com/problems/set-matrix-zeroes/"
+  }
+  
+  ]
 
   },
   {
@@ -504,12 +570,20 @@
           const item = document.createElement("div");
           item.className = `question-item ${solved[id] ? 'solved' : ''}`;
           item.innerHTML = `
-            <span>${q.title}</span>
+  ${
+    !solved[id]
+      ? `<span>
+           <button class="text-white font-medium hover:underline" onclick='window.open("${q.link}", "_blank")'>${q.title}</button>
+           <button class="action-btn view-btn ml-2 text-sm px-2 py-1" onclick='window.open("${q.link}", "_blank")'>View</button>
+         </span>`
+      : `<span class="text-white font-medium">${q.title}</span>`
+  }
             <span class="difficulty-badge ${q.difficulty}">${q.difficulty}</span>
             <button class="action-btn solution-btn" onclick='showSolution(${JSON.stringify(q.code || q.codeFile || "")})'>Solution</button>
             <button class="action-btn ${solved[id] ? 'undo-btn' : 'mark-btn'}" onclick='toggleSolved("${id}")'>
               ${solved[id] ? 'Undo' : 'Mark Solved'}
-              </button>`;
+              </button>
+              `;
           listContainer.appendChild(item);
         });
         
