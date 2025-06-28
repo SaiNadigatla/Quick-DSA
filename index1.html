@@ -78,7 +78,7 @@
         .then((userCredential) => {
           const user = userCredential.user;
           sessionStorage.setItem("loggedInUser", user.uid);
-          location.href = "new_index.html";
+          location.href = "index.html";
         })
         .catch((error) => {
           alert("Login Error: " + error.message);
