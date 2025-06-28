@@ -313,7 +313,7 @@
 
   auth.onAuthStateChanged((user) => {
     if (!user) {
-      window.location.href = "login.html"; // Redirect to login ...
+      window.location.href = "index1.html"; // Redirect to login ...
     } else {
       document.getElementById("welcome-user").innerText = `Welcome, ${user.email}`;
 
@@ -746,7 +746,7 @@ function updateSolvedCount() {
     
     function logout() {
       auth.signOut().then(() => {
-        location.href = "index.html";
+        location.href = "index1.html";
       });
     }
     
