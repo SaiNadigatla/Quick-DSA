@@ -29,7 +29,7 @@ A sleek and minimal DSA practice web app to help you **track progress**, **pract
 
 ## 📸 Preview
 
-![QuickDSA UI Screenshot](preview.png) <!-- Add an actual screenshot in your repo for best results -->
+![QuickDSA UI Screenshot](UI_ScreenSHot_1.png) <!-- Add an actual screenshot in your repo for best results -->
 
 ---
 
@@ -42,7 +42,15 @@ This also helped me improve my frontend skills and understand Firebase integrati
 
 ## 📂 Folder Structure
 
-
+📁 Quick-DSA/
+├── index.html
+├── login.html
+├── new_index.html (Practice mode)
+├── style.css
+├── main.js
+├── progress.js
+├── sidebar.js
+├── /solutions/ (text files for each problem)
 ---
 
 ## 🤝 Feedback & Contributions
@@ -54,7 +62,7 @@ Feel free to open issues or contribute improvements to make this better for all 
 ## 👨‍💻 Created by
 
 **Venkata Sai Nadigatla**  
-📬 [LinkedIn](https://www.linkedin.com/in/sainadigatla) | 🌐 [Live Site](https://sainadigatla.github.io/Quick-DSA/)
+📬 [LinkedIn](https://www.linkedin.com/in/venkata-sai-nadigatla-093118352/) | 🌐 [Live Site](https://sainadigatla.github.io/Quick-DSA/)
 
 ---
 
