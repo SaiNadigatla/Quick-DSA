@@ -29,7 +29,8 @@ A sleek and minimal DSA practice web app to help you **track progress**, **pract
 
 ## 📸 Preview
 
-![QuickDSA UI Screenshot](UI_ScreenSHot_1.png,UI_ScreenShot_2.png) <!-- Add an actual screenshot in your repo for best results -->
+![QuickDSA UI Screenshot](UI_ScreenSHot_1.png) <!-- Add an actual screenshot in your repo for best results -->
+![QuickDSA UI Screenshot](UI_ScreenShot_2.png) <!-- Add an actual screenshot in your repo for best results -->
 
 ---
 
