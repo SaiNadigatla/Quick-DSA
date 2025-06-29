@@ -258,6 +258,7 @@
         <button onclick="login()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Login</button>
         <p class="text-sm text-gray-400">New here? <button onclick="switchToRegister()" class="text-blue-400 hover:underline">Create an account</button></p>
       </div>
+        <p class="text-sm text-gray-400 text-center">New here? <button onclick="guestLogin()" class="text-blue-400 hover:underline">login as Guest</button></p>
     </div>
   </div>
       
@@ -538,6 +539,21 @@
   
 ];
 
+    function guestLogin() {
+  const guestEmail = "guest@gmail.com";
+  const guestPassword = "guest@143";
+
+  auth.signInWithEmailAndPassword(guestEmail, guestPassword)
+    .then(() => {
+      sessionStorage.setItem("guestMode", "true");
+      location.href = "index.html";
+    })
+    .catch((error) => {
+      console.error("Guest login error:", error.message);
+      alert("Guest login failed. Please check credentials.");
+    });
+}
+
   function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
@@ -624,9 +640,11 @@ function toggleSolved(id) {
   localStorage.setItem('solved', JSON.stringify(solved));
   renderFiltered();
 
-
   const user = firebase.auth().currentUser;
-  if (user) {
+  const guestUID = "1Vvq48WyWuT22YsZyr82MTs5qsf1";
+
+  // Only sync if the user is not the guest
+  if (user && user.uid !== guestUID) {
     firebase.firestore().collection('users').doc(user.uid).set({
       solved: solved
     }, { merge: true });
@@ -752,16 +770,39 @@ function updateSolvedCount() {
     
       // Initialize the app
     document.addEventListener("DOMContentLoaded", () => {
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          document.getElementById("auth-section").style.display = "none";
-          document.querySelector("main").style.display = "block";
-          document.getElementById("welcome-user").textContent = `Hello, ${user.email}`;
-          renderFiltered();
-        } else {
-          document.querySelector("main").style.display = "none";
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    document.getElementById("auth-section").style.display = "none";
+    document.querySelector("main").style.display = "block";
+
+    const isGuest = user.uid === "1Vvq48WyWuT22YsZyr82MTs5qsf1";
+
+    if (isGuest) {
+      document.getElementById("welcome-user").textContent = "Hello, Guest 👤";
+      
+
+      setTimeout(() => {
+        document.querySelectorAll(".action-btn").forEach(btn => {
+          btn.disabled = true;
+          btn.title = "Guest user cannot mark problems";
+          btn.classList.add("opacity-50", "cursor-not-allowed");
+        });
+      }, 100);
+      renderFiltered();
+    } else {
+      document.getElementById("welcome-user").textContent = `Hello, ${user.email}`;
+      db.collection('users').doc(user.uid).get().then((doc) => {
+        if (doc.exists) {
+          localStorage.setItem('solved', JSON.stringify(doc.data().solved || {}));
         }
+        renderFiltered();
       });
+    }
+  } else {
+    document.querySelector("main").style.display = "none";
+    document.getElementById("auth-section").style.display = "block";
+  }
+});
 
     });
     </script>
