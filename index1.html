@@ -24,6 +24,7 @@
         <button onclick="login()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Login</button>
         <p class="text-sm text-gray-400 text-center">New here? <button onclick="switchToRegister()" class="text-blue-400 hover:underline">Create an account</button></p>
       </div>
+        <p class="text-sm text-gray-400 text-center">New here? <button onclick="guestLogin()" class="text-blue-400 hover:underline">login as Guest</button></p>
     </div>
   </div>
 
@@ -53,6 +54,22 @@
       document.getElementById("login-form").classList.add("hidden");
       document.getElementById("register-form").classList.remove("hidden");
     }
+
+    
+function guestLogin() {
+  const guestEmail = "guest@gmail.com";
+  const guestPassword = "guest@143";
+
+  auth.signInWithEmailAndPassword(guestEmail, guestPassword)
+    .then(() => {
+      sessionStorage.setItem("guestMode", "true");
+      location.href = "index.html";
+    })
+    .catch((error) => {
+      console.error("Guest login error:", error.message);
+      alert("Guest login failed. Please check credentials.");
+    });
+}
 
     function register() {
       const email = document.getElementById("reg-email").value;
